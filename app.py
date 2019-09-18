@@ -1,11 +1,11 @@
 from tornado.web import Application, RequestHandler
 from tornado.ioloop import IOLoop
-# from tornado.httpclient import AsyncHTTPClient
 import json
 import requests
-# import tornado.escape
 
 api_base_url = "https://randomuser.me/api/?ud="
+
+
 
 #sending post request with user_id to my api
 class UserIdHandler(RequestHandler):
@@ -14,7 +14,31 @@ class UserIdHandler(RequestHandler):
         #using user_id to send a get request to the users api
         api_url = api_base_url + user_id
         response = requests.get(api_url)
-        self.write(response.content)
+        response_dict = json.loads(response.content)
+        #accesing data in json to retrieve the information needed
+        user_info_json = response_dict['results'][0]
+        lastname = user_info_json['name']['last']
+        firstname = user_info_json['name']['first']
+        image = user_info_json['picture']['large']
+        street = user_info_json['location']['street']
+        city = user_info_json['location']['city']
+
+        user_info_dict= {
+            'user': {
+            'lastname': '{}'.format(lastname),
+            'firstname':'{}'.format(firstname),
+            'image':'{}'.format(image), 
+            'Address':{
+            'street':'{}'.format(street),
+            'city':'{}'.format(city),
+                }
+            }
+        }
+
+        final_response = json.dumps(user_info_dict)
+
+        self.write(final_response)
+
 
 def make_app():
     urls = [("/", UserIdHandler)]
@@ -24,16 +48,3 @@ if __name__ == '__main__':
     app = make_app()
     app.listen(46546)
     IOLoop.instance().start()
-
-# lastname  = json["results"][0]["name"]["last"]
-# firstname = json["results"][0]["name"]["first"]
-
-
-
-    # async def get(self):
-    #     http = AsyncHTTPClient()
-    #     response = await http.fetch(api_base_url + user_id)
-    #     json = tornado.escape.json_decode(response.body)
-    #     lastname = json["results"][0]["name"]["last"]
-    #     firstname = json["results"][0]["name"]["first"]
-    #     self.write({'lastname': lastname})
