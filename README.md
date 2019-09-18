@@ -39,3 +39,4 @@ After setting the environment and cloning the project run the app using the comm
 folder, and test the post request in postman sending a post request to the url http://localhost:46546 with the key 'user_id' and any value
 of your preference. You will receive a json with the user information as shown in the picture below. 
 
+![post request and response](https://user-images.githubusercontent.com/45188063/65177852-ead93e00-da2d-11e9-947b-a2cdbddc4afb.jpg)
